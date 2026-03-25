@@ -78,7 +78,7 @@ En `sxhkdrc`:
 
 ## Solución de problemas
 
-ninguno.
+Ninguno.
 
 ### Brillo no funciona
 
