@@ -14,31 +14,37 @@ Un sistema OSD (On-Screen Display) ligero para bspwm que imita la estética de l
 ## Funcionalidades
 
 ### 1. Cambio de escritorio (CANAL)
+
 - Muestra icono de batería, icono de TV y número de escritorio.
 - Se muestra automáticamente al cambiar de escritorio.
 - Formato: `B 41%  TV 01`
 
 ### 2. Control de volumen
+
 - Teclas: `XF86AudioRaiseVolume`, `XF86AudioLowerVolume`.
 - Barra: `󰖀 ▰▰▰▰▱▱▱▱ 75%` (▰ lleno, ▱ vacío).
 - Límite máximo: 150%.
 
 ### 3. Mute toggle
+
 - Tecla: `XF86AudioMute`.
 - Muestra "🔇 MUTE" en rojo cuando está activo.
 
 ### 4. Control de brillo
+
 - Teclas: F9 (bajar), F10 (subir).
 - Barra: `☀️ ▰▰▰▰▱▱▱▱ 60%` (▰ lleno, ▱ vacío).
 - Usa brightnessctl + sudo sin contraseña.
 
 ### 5. Batería
+
 - Se muestra en el OSD de escritorio.
 - Iconos con 10 niveles de batería (Nerd Fonts).
 
 ## Instalación
 
 ### Dependencias
+
 - `bspwm`, `sxhkd` - Gestor de ventanas y atajos.
 - `dunst`, `dunstify` - Demonio de notificaciones.
 - `pactl` - Control de volumen (PulseAudio).
@@ -46,15 +52,19 @@ Un sistema OSD (On-Screen Display) ligero para bspwm que imita la estética de l
 - `sudo` - Para brightnessctl sin contraseña.
 
 ### Configurar sudo para brightnessctl
+
 ```bash
 echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl" | sudo tee /etc/sudoers.d/brightnessctl
 ```
 
 ### Configurar dunst
+
 Crear `~/.config/dunst/dunstrc` con estilo CRT (fondo negro, borde verde, fuente Meslo).
 
 ### Atajos de teclado
+
 En `sxhkdrc`:
+
 - `XF86AudioRaiseVolume` / `XF86AudioLowerVolume` - Volumen.
 - `XF86AudioMute` - Mute.
 - `F9` - Bajar brillo.
@@ -68,20 +78,26 @@ En `sxhkdrc`:
 
 ## Solución de problemas
 
+ninguno.
+
 ### Brillo no funciona
+
 1. Verificar regla sudo: `cat /etc/sudoers.d/brightnessctl`
 2. Probar manualmente: `sudo brightnessctl set 100`
 
 ### OSD no aparece
+
 1. Matar otros demonios: `killall xfce4-notifyd`
 2. Verificar dunst: `pgrep dunst`
 
 ### Atajos no responden
+
 ```bash
 pkill -USR1 -x sxhkd
 ```
 
 ### Daemon no funciona
+
 ```bash
 pkill -f bspwm_osd.sh
 ~/.config/bspwm/scripts/bspwm_osd.sh &
