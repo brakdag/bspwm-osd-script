@@ -157,3 +157,9 @@ F9
 
 F10
 	~/.config/bspwm/scripts/bspwm_osd.sh brightness-up
+
+# Capturar área seleccionada y guardar en ~/Imágenes con fecha/hora (nombre único)
+
+Print
+    scrot -s "$HOME/Imágenes/%Y-%m-%d-%H%M%S_scrot.png"
+

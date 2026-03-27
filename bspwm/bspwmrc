@@ -19,4 +19,4 @@ bspc rule -a Screenkey manage=off
 feh --bg-scale /usr/share/backgrounds/macos-catalina-mountains-island-morning-stock-5k-1920x1080-4015.jpg &
 #~/.config/polybar/launch.sh &
 ~/.config/bspwm/scripts/bspwm_osd.sh &
-# picom --config /home/gustavo/.config/picom.conf -b &
+picom --config /home/gustavo/.config/picom/picom.conf -b &
