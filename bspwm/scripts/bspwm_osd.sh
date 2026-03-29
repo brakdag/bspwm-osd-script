@@ -89,7 +89,7 @@ brightness_up() {
     local bri=$(brightnessctl get)
     local new_bri=$((bri + BRIGHTNESS_STEP))
     [ "$new_bri" -gt "$MAX_BRIGHTNESS" ] && new_bri="$MAX_BRIGHTNESS"
-    if ! sudo brightnessctl set "$new_bri" &> /dev/null; then
+    if ! sudo /usr/bin/brightnessctl set "$new_bri" &> /tmp/osd_error.log; then
         dunstify -r "$ID_BRIGHTNESS" -u critical -t "$DURATION_MS" "Error en brillo"
         return
     fi
@@ -101,7 +101,7 @@ brightness_down() {
     local bri=$(brightnessctl get)
     local new_bri=$((bri - BRIGHTNESS_STEP))
     [ "$new_bri" -lt 0 ] && new_bri=0
-    if ! sudo brightnessctl set "$new_bri" &> /dev/null; then
+    if ! sudo /usr/bin/brightnessctl set "$new_bri" &> /tmp/osd_error.log; then
         dunstify -r "$ID_BRIGHTNESS" -u critical -t "$DURATION_MS" "Error en brillo"
         return
     fi
