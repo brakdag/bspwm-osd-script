@@ -138,28 +138,31 @@ super + {Left,Down,Up,Right}
 
 # volume up
 XF86AudioRaiseVolume
-	~/.config/bspwm/scripts/bspwm_osd.sh volume-up
+	~/.config/bspwm/scripts/bspwm_osd.sh volume-up &
 
 # volume down
 XF86AudioLowerVolume
-	~/.config/bspwm/scripts/bspwm_osd.sh volume-down
+	~/.config/bspwm/scripts/bspwm_osd.sh volume-down &
 
 # mute toggle
 XF86AudioMute
-	~/.config/bspwm/scripts/bspwm_osd.sh mute
+	~/.config/bspwm/scripts/bspwm_osd.sh mute &
 
 # network status (optional)
-# super + n
-# 	~/.config/bspwm/scripts/bspwm_osd.sh network
+super + n
+ 	~/.config/bspwm/scripts/bspwm_osd.sh network &
 
 F9
-	~/.config/bspwm/scripts/bspwm_osd.sh brightness-down
+	~/.config/bspwm/scripts/bspwm_osd.sh brightness-down &
 
 F10
-	~/.config/bspwm/scripts/bspwm_osd.sh brightness-up
+	~/.config/bspwm/scripts/bspwm_osd.sh brightness-up &
 
 # Capturar área seleccionada y guardar en ~/Imágenes con fecha/hora (nombre único)
 
 Print
     scrot -s "$HOME/Imágenes/%Y-%m-%d-%H%M%S_scrot.png"
 
+# Mostrar/Ocultar Kitty instantáneamente
+grave
+    ~/.config/bspwm/scripts/quake_kitty.sh

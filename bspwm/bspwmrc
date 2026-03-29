@@ -16,7 +16,17 @@ bspc rule -a Chromium desktop='^2'
 bspc rule -a mplayer2 state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
-feh --bg-scale /usr/share/backgrounds/macos-catalina-mountains-island-morning-stock-5k-1920x1080-4015.jpg &
-#~/.config/polybar/launch.sh &
+# Regla para la ventana Quake (oculta al inicio)
+bspc rule -a "kitty:quake_kitty" state=floating sticky=on border=off hidden=on
+
+# Iniciar kitty en segundo plano al arrancar
+kitty -1 --class "quake_kitty" zsh &
+
+# Fondo de pantalla
+feh --no-fehbg --bg-scale '/usr/share/backgrounds/macos-catalina-mountains-island-morning-stock-5k-1920x1080-4015.jpg' &
+
+# Iniciar script OSD
 ~/.config/bspwm/scripts/bspwm_osd.sh &
-picom --config /home/gustavo/.config/picom/picom.conf -b &
+
+# Iniciar compositor de ventanas
+picom --config ~/.config/picom/picom.conf &

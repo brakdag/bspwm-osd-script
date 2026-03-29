@@ -25,7 +25,7 @@ check_deps() {
             echo "Error: $dep no instalado." >&2
             exit 1
         fi
-    done
+done
 }
 check_deps
 
@@ -77,8 +77,8 @@ volume_down() {
 mute_toggle() {
     pactl set-sink-mute @DEFAULT_SINK@ toggle
     sleep 0.2
-    local mute=$(pactl get-sink-mute @DEFAULT_SINK@ | grep -oP '(sí|no)')
-    if [ "$mute" = "sí" ]; then
+    local mute=$(LC_ALL=C pactl get-sink-mute @DEFAULT_SINK@ | grep -oP '(yes|no)')
+    if [ "$mute" = "yes" ]; then
         dunstify -r 3 -u critical -t "$DURATION_MS" "🔇 MUTE"
     else
         local vol=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -Po '[0-9]{1,3}(?=%)' | head -1)
@@ -91,7 +91,8 @@ brightness_up() {
     local new_bri=$((bri + BRIGHTNESS_STEP))
     [ "$new_bri" -gt "$MAX_BRIGHTNESS" ] && new_bri="$MAX_BRIGHTNESS"
     sudo brightnessctl set "$new_bri"
-    dunstify -r 4 -u normal -t "$DURATION_MS" "$(create_brightness_bar "$new_bri")"
+    local battery=$(get_battery_icon)
+    dunstify -r 4 -u normal -t "$DURATION_MS" "$battery $(create_brightness_bar "$new_bri")"
 }
 
 brightness_down() {
@@ -99,23 +100,30 @@ brightness_down() {
     local new_bri=$((bri - BRIGHTNESS_STEP))
     [ "$new_bri" -lt 0 ] && new_bri=0
     sudo brightnessctl set "$new_bri"
-    dunstify -r 4 -u normal -t "$DURATION_MS" "$(create_brightness_bar "$new_bri")"
+    local battery=$(get_battery_icon)
+    dunstify -r 4 -u normal -t "$DURATION_MS" "$battery $(create_brightness_bar "$new_bri")"
 }
 
 # Batería
 get_battery_icon() {
     local cap=$(cat "$BATTERY_PATH/capacity" 2>/dev/null || echo 0)
+    local status=$(cat "$BATTERY_PATH/status" 2>/dev/null || echo "Unknown")
+    local charging_icon=""
+
+    if [[ "$status" == "Charging" ]]; then
+        charging_icon="⚡"
+    fi
     
-    if [ "$cap" -le 10 ]; then echo " $cap%"
-    elif [ "$cap" -le 20 ]; then echo " $cap%"
-    elif [ "$cap" -le 30 ]; then echo " $cap%"
-    elif [ "$cap" -le 40 ]; then echo " $cap%"
-    elif [ "$cap" -le 50 ]; then echo " $cap%"
-    elif [ "$cap" -le 60 ]; then echo " $cap%"
-    elif [ "$cap" -le 70 ]; then echo " $cap%"
-    elif [ "$cap" -le 80 ]; then echo " $cap%"
-    elif [ "$cap" -le 90 ]; then echo " $cap%"
-    else echo " $cap%"
+    if [ "$cap" -le 10 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 20 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 30 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 40 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 50 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 60 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 70 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 80 ]; then echo " $cap%$charging_icon";
+    elif [ "$cap" -le 90 ]; then echo " $cap%$charging_icon";
+    else echo " $cap%$charging_icon";
     fi
 }
 
@@ -123,7 +131,6 @@ get_battery_icon() {
 desktop_change() {
     local did="$1"
     local num=$(bspc query -D -d "$did" --names)
-    local battery=$(get_battery_icon)
     local glyph
     case "$num" in
         1) glyph="➊" ;; 2) glyph="➋" ;; 3) glyph="➌" ;;
@@ -132,7 +139,18 @@ desktop_change() {
         10) glyph="❿" ;;
         *) glyph="$num" ;;
     esac
-    dunstify -r 1 -u normal -t "$DURATION_MS" "$battery  $glyph"
+    dunstify -r 1 -u normal -t "$DURATION_MS" "$glyph"
+}
+
+# Red
+show_network() {
+    local active_conn_name=$(nmcli -t -f active,name con show --active | awk -F: '$1 == "yes" && $2 != "lo" {print $2; exit}')
+
+    if [ -n "$active_conn_name" ]; then
+        dunstify -r 5 -u normal -t "$DURATION_MS" " $active_conn_name"
+    else
+        dunstify -r 5 -u normal -t "$DURATION_MS" "📵 SIN SEÑAL"
+    fi
 }
 
 # Daemon
@@ -149,5 +167,6 @@ case "${1:-}" in
     mute)        mute_toggle ;;
     brightness-up)   brightness_up ;;
     brightness-down) brightness_down ;;
+    network)         show_network ;;
     *)           start_daemon ;;
 esac
