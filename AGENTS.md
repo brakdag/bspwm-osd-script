@@ -23,9 +23,11 @@ Estás ejecutándote en un workspace que contiene enlaces simbólicos a las conf
 # Accomplished
 
 - Script `bspwm_osd.sh` implementado con módulos: volumen, mute, brillo, canal, batería.
+- Refactorización a estructura modular con `osd.conf` para centralizar configuraciones.
 - dunst configurado con estilo CRT (fondo negro, borde verde, fuente Meslo).
 - Atajos de teclas multimedia en sxhkdrc.
-- Control de brillo funcional con F9/F10 + sudo sin contraseña.
+- Control de brillo funcional con F9/F10 sin `sudo` mediante regla Udev.
+- Enlaces simbólicos configurados para trabajar directamente en el repo.
 - Barra de volumen: `▰` y `▱` con icono `🔊`.
 - Barra de brillo: `▰` y `▱` con icono `☀️`.
 - Indicador de batería con iconos Nerd Font.
@@ -33,9 +35,10 @@ Estás ejecutándote en un workspace que contiene enlaces simbólicos a las conf
 
 # Relevant files
 
-- `/home/gustavo/tv_osd_workspace/bspwm/scripts/bspwm_osd.sh` - Script principal OSD.
-- `/home/gustavo/tv_osd_workspace/sxhkd/sxhkdrc` - Atajos de teclado.
-- `/home/gustavo/.config/dunst/dunstrc` - Configuración de dunst.
+- `/mnt/DataSD/sandbox/tv_osd_workspace/bspwm/scripts/bspwm_osd.sh` - Script principal OSD.
+- `/mnt/DataSD/sandbox/tv_osd_workspace/bspwm/scripts/osd.conf` - Configuración externa.
+- `/mnt/DataSD/sandbox/tv_osd_workspace/sxhkd/sxhkdrc` - Atajos de teclado.
+- `~/.config/dunst/dunstrc` - Configuración de dunst.
 
 # Notes
 

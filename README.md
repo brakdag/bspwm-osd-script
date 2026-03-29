@@ -7,74 +7,33 @@ Un sistema OSD (On-Screen Display) ligero para bspwm que imita la estética de l
 - **Estilo CRT verde clásico**: Texto verde fosforescente estilo terminal antiguo.
 - **Usa dunst**: Para notificaciones con estilo retro (no osd_cat, que no escala bien fuentes TrueType).
 - **Barras de volumen y brillo**: Usa `▰` (bloque lleno) y `▱` (bloque claro) para mejor visibilidad.
-- **Control de brillo**: F9/F10 con brightnessctl + sudo sin contraseña.
-- **Indicador de batería**: Icono con porcentaje en el OSD de escritorio.
-- **Script único y ligero**: Un solo script bash que maneja todas las funcionalidades.
-
-## Funcionalidades
-
-### 1. Cambio de escritorio (CANAL)
-
-- Muestra icono de batería, icono de TV y número de escritorio.
-- Se muestra automáticamente al cambiar de escritorio.
-- Formato: `B 41%  TV 01`
-
-### 2. Control de volumen
-
-- Teclas: `XF86AudioRaiseVolume`, `XF86AudioLowerVolume`.
-- Barra: `󰖀 ▰▰▰▰▱▱▱▱ 75%` (▰ lleno, ▱ vacío).
-- Límite máximo: 150%.
-
-### 3. Mute toggle
-
-- Tecla: `XF86AudioMute`.
-- Muestra "🔇 MUTE" en rojo cuando está activo.
-
+- **Control de brillo**: F9/F10 con `brightnessctl` (sin `sudo` mediante regla Udev).
+...
 ### 4. Control de brillo
 
 - Teclas: F9 (bajar), F10 (subir).
 - Barra: `☀️ ▰▰▰▰▱▱▱▱ 60%` (▰ lleno, ▱ vacío).
-- Usa brightnessctl + sudo sin contraseña.
+- Configuración: Permisos mediante regla Udev para evitar `sudo`.
 
-### 5. Batería
+...
+### Configurar permisos para brightnessctl (Sin sudo)
 
-- Se muestra en el OSD de escritorio.
-- Iconos con 10 niveles de batería (Nerd Fonts).
-
-## Instalación
-
-### Dependencias
-
-- `bspwm`, `sxhkd` - Gestor de ventanas y atajos.
-- `dunst`, `dunstify` - Demonio de notificaciones.
-- `pactl` - Control de volumen (PulseAudio).
-- `brightnessctl` - Control de brillo.
-- `sudo` - Para brightnessctl sin contraseña.
-
-### Configurar sudo para brightnessctl
+Crear `/etc/udev/rules.d/99-backlight.rules`:
 
 ```bash
-echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl" | sudo tee /etc/sudoers.d/brightnessctl
+ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chgrp video /sys/class/backlight/%k/brightness", RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
 ```
 
-### Configurar dunst
+Asegurarse de que tu usuario pertenece al grupo `video`.
 
-Crear `~/.config/dunst/dunstrc` con estilo CRT (fondo negro, borde verde, fuente Meslo).
-
-### Atajos de teclado
-
-En `sxhkdrc`:
-
-- `XF86AudioRaiseVolume` / `XF86AudioLowerVolume` - Volumen.
-- `XF86AudioMute` - Mute.
-- `F9` - Bajar brillo.
-- `F10` - Subir brillo.
-
+...
 ## Archivos
 
 - `bspwm/scripts/bspwm_osd.sh` - Script principal OSD.
+- `bspwm/scripts/osd.conf` - Configuración externa.
 - `sxhkd/sxhkdrc` - Configuración de atajos.
 - `~/.config/dunst/dunstrc` - Configuración de dunst.
+
 
 ## Solución de problemas
 
