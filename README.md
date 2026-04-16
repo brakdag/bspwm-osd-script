@@ -61,3 +61,7 @@ pkill -USR1 -x sxhkd
 pkill -f bspwm_osd.sh
 ~/.config/bspwm/scripts/bspwm_osd.sh &
 ```
+
+## Historial de Cambios
+
+- **Ajuste Fino de Brillo**: Se implementó una lógica de saltos dinámicos. Cuando el brillo es $\le 10\%$, el incremento/decremento cambia a $1\%$ del valor máximo para permitir un ajuste preciso en niveles bajos. El resto del rango mantiene el salto estándar definido en `osd.conf`.

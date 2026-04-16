@@ -87,7 +87,11 @@ mute_toggle() {
 
 brightness_up() {
     local bri=$(brightnessctl get)
-    local new_bri=$((bri + BRIGHTNESS_STEP))
+    local step=$BRIGHTNESS_STEP
+    # Si el brillo es <= 10%, usar saltos de 1%
+    [ $(( bri * 100 / MAX_BRIGHTNESS )) -le 10 ] && step=$(( MAX_BRIGHTNESS / 100 ))
+    
+    local new_bri=$((bri + step))
     [ "$new_bri" -gt "$MAX_BRIGHTNESS" ] && new_bri="$MAX_BRIGHTNESS"
     if ! sudo /usr/bin/brightnessctl set "$new_bri" &> /tmp/osd_error.log; then
         dunstify -r "$ID_BRIGHTNESS" -u critical -t "$DURATION_MS" "Error en brillo"
@@ -99,7 +103,11 @@ brightness_up() {
 
 brightness_down() {
     local bri=$(brightnessctl get)
-    local new_bri=$((bri - BRIGHTNESS_STEP))
+    local step=$BRIGHTNESS_STEP
+    # Si el brillo es <= 10%, usar saltos de 1%
+    [ $(( bri * 100 / MAX_BRIGHTNESS )) -le 10 ] && step=$(( MAX_BRIGHTNESS / 100 ))
+    
+    local new_bri=$((bri - step))
     [ "$new_bri" -lt 0 ] && new_bri=0
     if ! sudo /usr/bin/brightnessctl set "$new_bri" &> /tmp/osd_error.log; then
         dunstify -r "$ID_BRIGHTNESS" -u critical -t "$DURATION_MS" "Error en brillo"
